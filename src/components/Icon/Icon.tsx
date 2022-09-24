@@ -21,9 +21,9 @@ export const MenuIcon: React.FC<IconProps> = ({ ...props }) => {
       {...props}
     >
       <path
-        fill-rule="evenodd"
+        fillRule="evenodd"
         d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-        clip-rule="evenodd"
+        clipRule="evenodd"
       ></path>
     </svg>
   );
@@ -55,8 +55,8 @@ export const Arrow: React.FC<IconProps> = ({ ...props }) => {
       <path
         d="M7 17V1M7 1L1 7M7 1L13 7"
         stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
