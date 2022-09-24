@@ -1,5 +1,9 @@
 import React from "react";
 
-export const LandingLayout = () => {
+interface IProps {
+  children: React.ReactNode;
+}
+
+export const LandingLayout: React.FC<IProps> = ({ children }) => {
   return <div>Landing</div>;
 };
