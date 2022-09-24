@@ -1,4 +1,4 @@
-import { Header, Main } from "@/containers";
+import { Header, Main } from "@/containers/index";
 import type { NextPage } from "next";
 
 const Home: NextPage = () => {

@@ -1,4 +1,4 @@
-import { Button, Icon } from "@/components";
+import { Button, Icon } from "@/components/index";
 
 export const Main = () => {
   return (

@@ -1,4 +1,4 @@
-import { AppContextProvider } from "@/contexts";
+import { AppContextProvider } from "@/contexts/index";
 
 interface IProps {
   children?: any;

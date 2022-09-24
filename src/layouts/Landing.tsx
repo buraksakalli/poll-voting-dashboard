@@ -5,5 +5,5 @@ interface IProps {
 }
 
 export const LandingLayout: React.FC<IProps> = ({ children }) => {
-  return <div>Landing</div>;
+  return <>{children}</>;
 };

@@ -1,6 +1,6 @@
-import { Link } from "@/components";
-import { useAuthText } from "@/hooks";
 import Image from "next/image";
+import { Link } from "@/components/index";
+import { useAuthText } from "@/hooks/index";
 import { LayoutsProps } from "./layouts.types";
 
 export const AuthLayout: React.FC<LayoutsProps> = ({ children }) => {
@@ -23,14 +23,15 @@ export const AuthLayout: React.FC<LayoutsProps> = ({ children }) => {
             <h2 className="text-lg font-semibold text-gray-900">
               {text.linkText}
             </h2>
-            <p className="mt-2 text-sm text-gray-700">
-              {text.description}
-              <Link href={text.link}>
-                <a className="font-medium text-primary hover:underline">
-                  {text.linkText}
-                </a>
+            <div className="mt-2 text-sm text-gray-700">
+              <span>{text.description}</span>
+              <Link
+                href={text.link}
+                className="font-medium text-primary hover:underline"
+              >
+                {text.linkText}
               </Link>
-            </p>
+            </div>
           </div>
         </div>
         {children}
@@ -38,3 +39,5 @@ export const AuthLayout: React.FC<LayoutsProps> = ({ children }) => {
     </div>
   );
 };
+
+export default AuthLayout;

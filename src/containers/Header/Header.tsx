@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Button, Icon, Link } from "@/components";
+import { Button, Icon, Link } from "@/components/index";
 
 export const Header = () => {
   return (

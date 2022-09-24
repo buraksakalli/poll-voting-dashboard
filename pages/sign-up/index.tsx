@@ -1,10 +1,7 @@
-import type { NextPage } from "next";
-import Image from "next/image";
-import Link from "next/link";
-import { AuthLayout } from "@/layouts";
-import { Button, Input } from "@/components";
+import { AuthLayout } from "@/layouts/index";
+import { Button, Input } from "@/components/index";
 
-const Login: NextPage = () => {
+const SignUp = () => {
   return (
     <AuthLayout>
       <form className="mt-10 grid grid-cols-1 gap-y-4">
@@ -22,13 +19,20 @@ const Login: NextPage = () => {
           autoComplete="password"
           required
         />
+        <Input
+          label="Password"
+          name="password"
+          type="password"
+          autoComplete="password"
+          required
+        />
         <Button
           variant="primary"
           type="submit"
           className="rounded-full text-white flex justify-center"
         >
           <span className="flex items-center gap-2">
-            Sign in <span>→</span>
+            Sign up <span>→</span>
           </span>
         </Button>
       </form>
@@ -36,4 +40,4 @@ const Login: NextPage = () => {
   );
 };
 
-export default Login;
+export default SignUp;

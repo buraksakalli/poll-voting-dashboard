@@ -1,8 +1,8 @@
 import type { ReactElement, ReactNode } from "react";
 import type { AppProps } from "next/app";
 import type { NextPage } from "next";
-import { LandingLayout } from "@/layouts";
-import { Providers } from "@/components";
+import { LandingLayout } from "@/layouts/index";
+import { Providers } from "@/components/index";
 import "../styles/globals.css";
 
 type NextPageWithLayout = NextPage & {
