@@ -1,47 +1,28 @@
-import { useEffect, useState } from "react";
 import type { NextPage } from "next";
-import { DashboardLayout } from "@/layouts/index";
-import { Button, Card, Container, Link } from "@/components/index";
+import { useQuery } from "react-query";
 import { getUsersPolls } from "@/api/index";
+import { DashboardLayout } from "@/layouts/index";
+import { Card, Container, Empty } from "@/components/index";
 
 const MyPolls: NextPage = () => {
-  const [polls, setPolls] = useState<any>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    setLoading(true);
-
-    getUsersPolls().then((data) => {
-      setPolls(data);
-      setLoading(false);
-    });
-  }, []);
+  const { data, isLoading } = useQuery("userPolls", () => getUsersPolls());
 
   return (
     <DashboardLayout>
       <Container className="justify-center grid md:grid-cols-2 gap-8 gap-y-12 grid-cols-1 pb-20">
-        {polls?.map((poll: any) => (
+        {data?.map((item: any) => (
           <Card
-            key={poll?.id}
-            title={poll?.title}
-            createdAt={poll?.createdAt}
-            slug={poll?.slug}
-            vote={poll?.vote}
+            key={item?.poll?.id}
+            title={item?.poll?.title}
+            createdAt={item?.poll?.created_at}
+            slug={item?.poll?.slug}
+            vote={item?.entries}
+            fullname={item?.user.fullname}
+            expiryDate={item?.poll?.expiry_date}
           />
         ))}
       </Container>
-      {!loading && polls.length === 0 && (
-        <div className="text-center">
-          <h1 className="text-2xl font-bold">You have no polls</h1>
-          <div className="flex w-full justify-center my-6">
-            <Link href="/create">
-              <Button variant="primary" className="rounded-full">
-                Create a poll
-              </Button>
-            </Link>
-          </div>
-        </div>
-      )}
+      {!isLoading && data.length === 0 && <Empty message="You have no polls" />}
     </DashboardLayout>
   );
 };

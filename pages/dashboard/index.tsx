@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import { useInfiniteQuery } from "react-query";
 import { getPollsPage } from "@/api/index";
 import { DashboardLayout } from "@/layouts/index";
-import { Card, Container } from "@/components/index";
+import { Button, Card, Container, Empty, Link } from "@/components/index";
 
 const Dashboard: NextPage = () => {
   const intObserver = useRef();
@@ -37,21 +37,24 @@ const Dashboard: NextPage = () => {
     <DashboardLayout>
       <Container className="justify-center grid md:grid-cols-2 gap-8 gap-y-12 grid-cols-1 pb-20 grid-flow-row">
         {data?.pages.map((polls: any) => {
-          return polls.map((poll: any) => {
+          return polls.map((item: any) => {
             return (
               <Card
-                key={poll?.id}
-                title={poll?.title}
-                createdAt={poll?.createdAt}
-                slug={poll?.slug}
-                vote={poll?.vote}
+                key={item?.poll.id}
+                title={item?.poll.title}
+                createdAt={item?.poll.createdAt}
+                slug={item?.poll.slug}
+                vote={item?.entries}
+                fullname={item?.user.fullname}
                 // @ts-ignore
                 ref={lastPostRef}
+                expiryDate={item?.poll?.expiry_date}
               />
             );
           });
         })}
       </Container>
+      {data?.pages[0].length === 0 && <Empty message="No polls found" />}
     </DashboardLayout>
   );
 };

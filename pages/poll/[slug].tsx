@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 const ApexCharts = dynamic(() => import("react-apexcharts"), { ssr: false });
 import classNames from "classnames";
 import QRCode from "react-qr-code";
+import { toast } from "react-toastify";
 import { DashboardLayout } from "@/layouts/index";
 import { Button, Container } from "@/components/index";
 import {
@@ -67,25 +68,23 @@ const Poll = ({ slug }: { slug: string }) => {
   const handleClick = async () => {
     if (selectedOption) {
       if (dayjs(data?.poll.expiry_date).isBefore(dayjs())) {
-        alert("Poll is expired");
+        toast.error("Poll has expired");
         return;
       }
+
       const res = await createEntry({
         poll_id: data?.poll._id!,
         option: selectedOption,
+      }).catch((err) => {
+        toast.error(err.response.data.message);
       });
 
       if (res?.data?._id) {
         queryClient.invalidateQueries("poll");
-        // TODO: show success message
-        // successfull!
-      } else {
-        // error
+        toast.success("Your vote has been recorded");
       }
     }
   };
-
-  // TODO: Add a loading state
 
   return (
     <DashboardLayout>
@@ -93,11 +92,11 @@ const Poll = ({ slug }: { slug: string }) => {
         <section className="w-full">
           <div className="flex items-center md:justify-between flex-col md:flex-row">
             <div>
-              <h1 className="tracking-wide text-3xl md:text-7xl font-semibold text-inverted md:max-w-3xl">
+              <h1 className="tracking-wide text-3xl md:text-5xl font-semibold text-inverted md:max-w-3xl">
                 {data?.poll?.title}
               </h1>
               <p className="text-inverted font-thin my-4">
-                Created by <span>{data?.poll?.user_id}</span> at{" "}
+                Created by <span>{data?.user?.fullname}</span> at{" "}
                 <span className="text-inverted font-thin">
                   {dayjs(data?.poll?.created_at).format("DD.MM.YYYY HH:mm")}
                 </span>

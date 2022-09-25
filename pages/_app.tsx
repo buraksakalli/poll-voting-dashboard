@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import type { NextPage } from "next";
 import { LandingLayout } from "@/layouts/index";
 import { Providers } from "@/components/index";
+import "react-toastify/dist/ReactToastify.css";
 import "../styles/globals.css";
 
 type NextPageWithLayout = NextPage & {

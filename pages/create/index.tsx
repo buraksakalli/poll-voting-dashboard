@@ -1,10 +1,11 @@
 import { useState } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { Button, Container, Icon, Input, Spinner } from "@/components/index";
-import { DashboardLayout } from "@/layouts/index";
-import { slugGenerator } from "@/utils/index";
+import { toast } from "react-toastify";
 import { createPoll } from "@/api/index";
+import { DashboardLayout } from "@/layouts/index";
+import { Button, Container, Icon, Input, Spinner } from "@/components/index";
+import { slugGenerator } from "@/utils/index";
 
 const Create: NextPage = () => {
   const [options, setOptions] = useState(["", ""]);
@@ -23,7 +24,7 @@ const Create: NextPage = () => {
   const handleAddOption = () => {
     if (options.length < 5) {
       setOptions([...options, ""]);
-    }
+    } else toast.warning("You can only add up to 5 options");
   };
 
   const handleRemoveOption = (index: number) => {
@@ -31,7 +32,7 @@ const Create: NextPage = () => {
       const newOptions = [...options];
       newOptions.splice(index, 1);
       setOptions(newOptions);
-    }
+    } else toast.warning("You must have at least 2 options");
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -45,16 +46,23 @@ const Create: NextPage = () => {
       options,
     };
 
-    const res = await createPoll(data).then((res) => res);
+    const res = await createPoll(data)
+      .then((res) => res)
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
 
-    if (res._id) router.push(`/poll/${res.slug}`);
+    if (res._id) {
+      toast.success("Poll created successfully");
+      router.push(`/poll/${res.slug}`);
+    }
 
     setLoading(false);
   };
 
   return (
     <DashboardLayout>
-      <Container>
+      <Container className="pb-20">
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col space-y-4">
             <div className="flex flex-col space-y-2">
