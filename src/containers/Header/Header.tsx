@@ -4,7 +4,7 @@ import { Button, Icon, Link } from "@/components/index";
 export const Header = () => {
   return (
     <header className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-4 pb-16 text-center">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
         <nav className="relative z-50 flex justify-between">
           <div className="flex items-center md:gap-x-12">
             <Image src="/cactus.png" alt="logo" width={60} height={60} />
