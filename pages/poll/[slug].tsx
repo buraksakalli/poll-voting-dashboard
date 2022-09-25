@@ -38,7 +38,7 @@ const Poll = () => {
   const handleClick = async () => {
     const token = getCookie("token");
 
-    const res = await fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/entry`, {
+    await fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/entry`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
