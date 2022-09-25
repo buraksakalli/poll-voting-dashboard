@@ -4,8 +4,6 @@ import type { NextRequest } from "next/server";
 const verifyToken = async (token: string | undefined) => {
   if (!token) return false;
 
-  console.log(token);
-
   const user = await fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/auth`, {
     method: "POST",
     headers: {
@@ -21,6 +19,8 @@ const verifyToken = async (token: string | undefined) => {
   return user;
 };
 
+const matcher = ["/sign-up", "/login", "/dashboard/:path"];
+
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get("token");
   const user = await verifyToken(token);
@@ -30,7 +30,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
   }
-  if (request.nextUrl.pathname === "/login") {
+  if (matcher.includes(request.nextUrl.pathname)) {
     if (user) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
@@ -40,5 +40,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path", "/login"],
+  matcher,
 };
