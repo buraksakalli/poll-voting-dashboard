@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "react-query";
 import { AppContextProvider } from "@/contexts/index";
 
 interface IProps {
@@ -5,7 +6,12 @@ interface IProps {
 }
 
 export function Providers({ children }: IProps) {
-  return <AppContextProvider>{children}</AppContextProvider>;
+  const queryClient = new QueryClient();
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AppContextProvider>{children}</AppContextProvider>
+    </QueryClientProvider>
+  );
 }
 
 export * from "./withProviders";

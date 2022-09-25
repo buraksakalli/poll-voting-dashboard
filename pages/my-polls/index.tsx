@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import type { NextPage } from "next";
-import { getCookie } from "cookies-next";
+import { DashboardLayout } from "@/layouts/index";
 import { Button, Card, Container, Link } from "@/components/index";
-import { DashboardHeader } from "@/containers/index";
+import { getUsersPolls } from "@/api/index";
 
 const MyPolls: NextPage = () => {
   const [polls, setPolls] = useState<any>([]);
@@ -10,25 +10,15 @@ const MyPolls: NextPage = () => {
 
   useEffect(() => {
     setLoading(true);
-    const token = getCookie("token");
 
-    fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/user/polls`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setPolls(data);
-        setLoading(false);
-      });
+    getUsersPolls().then((data) => {
+      setPolls(data);
+      setLoading(false);
+    });
   }, []);
 
   return (
-    <>
-      <DashboardHeader />
+    <DashboardLayout>
       <Container className="justify-center grid md:grid-cols-2 gap-8 gap-y-12 grid-cols-1 pb-20">
         {polls?.map((poll: any) => (
           <Card
@@ -52,7 +42,7 @@ const MyPolls: NextPage = () => {
           </div>
         </div>
       )}
-    </>
+    </DashboardLayout>
   );
 };
 

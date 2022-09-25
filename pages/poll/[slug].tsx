@@ -3,16 +3,16 @@ import { useRouter } from "next/router";
 import dayjs from "dayjs";
 import dynamic from "next/dynamic";
 const ApexCharts = dynamic(() => import("react-apexcharts"), { ssr: false });
-import { getCookie } from "cookies-next";
 import classNames from "classnames";
 import QRCode from "react-qr-code";
+import { DashboardLayout } from "@/layouts/index";
 import { Button, Container } from "@/components/index";
-import { DashboardHeader } from "@/containers/index";
 import {
   shareOnFacebook,
   shareOnLinkedin,
   shareOnTwitter,
 } from "@/utils/webIntent";
+import { createEntry, getPoll } from "@/api/index";
 
 interface IPoll {
   title: string;
@@ -54,50 +54,47 @@ const Poll = () => {
 
   useEffect(() => {
     setLoading(true);
-    if (slug)
-      fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/polls/${slug}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setPolls(data);
-          setLoading(false);
-          setPollOptions({ labels: data.poll.options });
-          setPollSeries(data.series);
-          if (data.entries.length > 0) setShowGraph(true);
-          if (dayjs(data.poll.expiry_date).isBefore(dayjs()))
-            setIsPollExpired(true);
-        });
+    if (slug) {
+      getPoll(String(slug)).then((data) => {
+        setPolls(data);
+        setLoading(false);
+        setPollOptions({ labels: data.poll.options });
+        setPollSeries(data.series);
+        if (data.entries.length > 0) setShowGraph(true);
+        if (dayjs(data.poll.expiry_date).isBefore(dayjs()))
+          setIsPollExpired(true);
+      });
+    }
   }, [slug]);
 
   const handleClick = async () => {
-    const token = getCookie("token");
-    // check if poll is expired then dont allow
-    if (dayjs(poll?.poll.expiry_date).isBefore(dayjs())) {
-      alert("Poll is expired");
-      return;
-    }
-    await fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/entry`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        poll_id: poll?.poll?._id,
+    if (selectedOption) {
+      if (dayjs(poll?.poll.expiry_date).isBefore(dayjs())) {
+        alert("Poll is expired");
+        return;
+      }
+      const res = await createEntry({
+        poll_id: poll?.poll._id!,
         option: selectedOption,
-      }),
-    });
+      });
+
+      if (res.data._id) {
+        // successfull!
+      } else {
+        // error
+      }
+    }
   };
 
   // TODO: Add a loading state
 
   return (
-    <>
-      <DashboardHeader />
+    <DashboardLayout>
       <Container className="justify-center grid grid-cols-1 gap-8 gap-y-12 pb-20">
         <section className="w-full">
           <div className="flex items-center md:justify-between flex-col md:flex-row">
             <div>
-              <h1 className="tracking-wide text-7xl font-semibold text-inverted">
+              <h1 className="tracking-wide text-3xl md:text-7xl font-semibold text-inverted md:max-w-3xl">
                 {poll?.poll?.title}
               </h1>
               <p className="text-inverted font-thin my-4">
@@ -182,7 +179,7 @@ const Poll = () => {
           </div>
         </section>
       </Container>
-    </>
+    </DashboardLayout>
   );
 };
 
