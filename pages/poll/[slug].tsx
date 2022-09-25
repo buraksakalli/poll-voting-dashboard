@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import dayjs from "dayjs";
+import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
+import { useQuery, useQueryClient } from "react-query";
+import dayjs from "dayjs";
 const ApexCharts = dynamic(() => import("react-apexcharts"), { ssr: false });
 import classNames from "classnames";
 import QRCode from "react-qr-code";
@@ -13,8 +14,6 @@ import {
   shareOnTwitter,
 } from "@/utils/webIntent";
 import { createEntry, getPoll } from "@/api/index";
-import { useQuery, useQueryClient } from "react-query";
-import { GetServerSideProps } from "next";
 
 interface IPoll {
   title: string;
@@ -48,10 +47,7 @@ const Poll = ({ slug }: { slug: string }) => {
 
   const queryClient = useQueryClient();
 
-  // const router = useRouter();
-  // const { slug } = router.query;
-
-  const { data, status, error } = useQuery("poll", () => getPoll(String(slug)));
+  const { data } = useQuery("poll", () => getPoll(String(slug)));
 
   useEffect(() => {
     setLoading(false);
@@ -185,8 +181,6 @@ const Poll = ({ slug }: { slug: string }) => {
     </DashboardLayout>
   );
 };
-
-// getServerSideProps and return slug
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const slug = context.params?.slug ?? "";
