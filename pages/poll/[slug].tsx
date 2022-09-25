@@ -61,8 +61,8 @@ const Poll = () => {
           setPolls(data);
           setLoading(false);
           setPollOptions({ labels: data.poll.options });
-          setPollSeries(data?.series);
-          if (data?.entries.length > 0) setShowGraph(true);
+          setPollSeries(data.series);
+          if (data.entries.length > 0) setShowGraph(true);
           if (dayjs(data.poll.expiry_date).isBefore(dayjs()))
             setIsPollExpired(true);
         });
