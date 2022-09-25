@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import { useInfiniteQuery } from "react-query";
 import { getPollsPage } from "@/api/index";
 import { DashboardLayout } from "@/layouts/index";
-import { Button, Card, Container, Empty, Link } from "@/components/index";
+import { Card, Container, Empty, Spinner } from "@/components/index";
 
 const Dashboard: NextPage = () => {
   const intObserver = useRef();
@@ -55,6 +55,11 @@ const Dashboard: NextPage = () => {
         })}
       </Container>
       {data?.pages[0].length === 0 && <Empty message="No polls found" />}
+      {isFetchingNextPage && (
+        <div className="flex items-center w-full justify-center pb-20">
+          <Spinner />
+        </div>
+      )}
     </DashboardLayout>
   );
 };

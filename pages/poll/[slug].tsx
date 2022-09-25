@@ -8,7 +8,7 @@ import classNames from "classnames";
 import QRCode from "react-qr-code";
 import { toast } from "react-toastify";
 import { DashboardLayout } from "@/layouts/index";
-import { Button, Container } from "@/components/index";
+import { Button, Container, Spinner } from "@/components/index";
 import {
   shareOnFacebook,
   shareOnLinkedin,
@@ -48,7 +48,7 @@ const Poll = ({ slug }: { slug: string }) => {
 
   const queryClient = useQueryClient();
 
-  const { data } = useQuery("poll", () => getPoll(String(slug)));
+  const { data, isLoading } = useQuery("poll", () => getPoll(String(slug)));
 
   useEffect(() => {
     setLoading(false);
@@ -66,6 +66,7 @@ const Poll = ({ slug }: { slug: string }) => {
   }, [data]);
 
   const handleClick = async () => {
+    setLoading(true);
     if (selectedOption) {
       if (dayjs(data?.poll.expiry_date).isBefore(dayjs())) {
         toast.error("Poll has expired");
@@ -84,6 +85,7 @@ const Poll = ({ slug }: { slug: string }) => {
         toast.success("Your vote has been recorded");
       }
     }
+    setLoading(false);
   };
 
   return (
@@ -166,15 +168,23 @@ const Poll = ({ slug }: { slug: string }) => {
               </button>
             ))}
           </div>
-          <div className="flex items-center justify-center">
-            <button
-              onClick={handleClick}
-              disabled={isPollExpired}
-              className="disabled:bg-gray-500 active:scale-95 transition-all bg-primary rounded-lg px-4 py-8 text-white md:w-1/3 w-full"
-            >
-              <span className="text-3xl">Vote</span>
-            </button>
-          </div>
+          {isLoading && (
+            <div className="flex items-center w-full justify-center pb-20">
+              <Spinner />
+            </div>
+          )}
+          {!isLoading && (
+            <div className="flex items-center justify-center">
+              <button
+                onClick={handleClick}
+                disabled={isPollExpired || loading}
+                className="flex disabled:bg-gray-500 active:scale-95 transition-all bg-primary rounded-lg px-4 py-8 text-white md:w-1/3 w-full items-center justify-center"
+              >
+                {loading && <Spinner />}
+                <span className="text-3xl">Vote</span>
+              </button>
+            </div>
+          )}
         </section>
       </Container>
     </DashboardLayout>

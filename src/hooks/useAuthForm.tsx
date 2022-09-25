@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { authUser } from "../api";
 import { toast } from "react-toastify";
+import { authUser } from "../api";
 
 type UseLoginProps = {
   type: "LOGIN" | "REGISTER";
