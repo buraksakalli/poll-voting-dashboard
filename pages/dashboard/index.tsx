@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { Card, Container } from "@/components/index";
-import { DashboardHeader, Header } from "@/containers/index";
+import { DashboardHeader } from "@/containers/index";
 
 const Dashboard: NextPage = () => {
   const [polls, setPolls] = useState<any>([]);
@@ -15,7 +15,7 @@ const Dashboard: NextPage = () => {
   return (
     <>
       <DashboardHeader />
-      <Container className="justify-center grid md:grid-cols-2 gap-8 gap-y-12 grid-cols-1">
+      <Container className="justify-center grid md:grid-cols-2 gap-8 gap-y-12 grid-cols-1 pb-20">
         {polls.map((poll: any) => (
           <Card
             key={poll?.id}

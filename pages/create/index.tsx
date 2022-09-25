@@ -1,27 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { NextPage } from "next";
-import { Card, Container, Input } from "@/components/index";
+import { useRouter } from "next/router";
+import { Button, Container, Icon, Input, Spinner } from "@/components/index";
 import { DashboardHeader } from "@/containers/index";
 import { getCookie } from "cookies-next";
-import slugGenerator from "@/utils/slugGenerator";
-
-/* Requirements:
-  1- Create an input for title title
-  2- Create an input for expiration date
-  3- Create at least to inputs for options.
-  4- Create a button to add more options
-  5- Create a button to submit the form
-  6- User can add maximum 5 options
-  7- User can add minimum 2 options
-  8- User can't submit the form if there is no title or expiration date
-  9- User can't submit the form if there is no options
-  10- User can't submit the form if there is no title or expiration date
-  11- User can't remove the last two options
-*/
-//Example
+import { slugGenerator } from "@/utils/index";
 
 const Create: NextPage = () => {
   const [options, setOptions] = useState(["", ""]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   const handleOptionChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -46,44 +34,18 @@ const Create: NextPage = () => {
     }
   };
 
-  /*
-
-title: {
-    type: String,
-    required: true,
-  },
-  options: {
-    type: [String],
-    required: true,
-  },
-  expiry_date: {
-    type: Date,
-    required: true,
-  },
-  user_id: {
-    type: String,
-    required: true,
-  },
-  slug: {
-    type: String,
-    required: true,
-  },
-  created_at: {
-    type: Date,
-    default: Date.now,
-  },
-  */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
+
     const form = {
       expiry_date: e.currentTarget.expiry_date.value,
       title: e.currentTarget.poll_title.value,
       slug: slugGenerator(e.currentTarget.poll_title.value),
     };
-    console.log(form, options);
 
     const token = getCookie("token");
-    await fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/polls`, {
+    const res = await fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/polls`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -93,7 +55,13 @@ title: {
         ...form,
         options,
       }),
-    });
+    }).then((res) => res.json());
+
+    if (res._id) {
+      // Show a toast message and redirect to the poll page
+      router.push(`/poll/${res.slug}`);
+    }
+    setLoading(false);
   };
 
   return (
@@ -102,44 +70,69 @@ title: {
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col space-y-4">
           <div className="flex flex-col space-y-2">
-            <Input type="text" name="poll_title" label="Title" />
+            <Input type="text" name="poll_title" label="Title" required />
           </div>
           <div className="flex flex-col space-y-2">
-            <Input type="date" name="expiry_date" label="Expiration Date" />
+            <Input
+              type="date"
+              name="expiry_date"
+              label="Expiration Date"
+              required
+              min={new Date().toISOString().split("T")[0]}
+            />
           </div>
           <div className="flex flex-col space-y-2">
-            <label htmlFor="options">Options</label>
+            <div className="flex mb-3 items-center space-x-2">
+              <label className="block text-md font-medium text-gray-700">
+                Options
+              </label>
+              <div className="flex justify-center">
+                <Button onClick={handleAddOption} variant="primary">
+                  <Icon
+                    name="PlusIcon"
+                    className="stroke-white rotate-0 group-active:rotate-45 duration-300"
+                  />
+                </Button>
+              </div>
+            </div>
             {options.map((option, index) => (
-              <div key={index} className="flex items-center space-x-2">
-                <Input
-                  type="text"
-                  id="options"
-                  value={option}
-                  onChange={(e) => handleOptionChange(e, index)}
-                />
-                <button type="button" onClick={() => handleRemoveOption(index)}>
-                  Remove
-                </button>
+              <div key={index} className="flex flex-col w-full">
+                <label
+                  className="mb-3 block text-sm font-medium text-gray-700"
+                  htmlFor={`option-${index}`}
+                >
+                  Option {index + 1}
+                </label>
+                <div className="w-full flex items-center space-x-2">
+                  <Input
+                    type="text"
+                    id={`option-${index}`}
+                    value={option}
+                    onChange={(e) => handleOptionChange(e, index)}
+                    required
+                  />
+                  <Button onClick={() => handleRemoveOption(index)}>
+                    <Icon
+                      name="PlusIcon"
+                      className="stroke-gray-500 rotate-45 group-active:rotate-0 transition-all"
+                    />
+                  </Button>
+                </div>
               </div>
             ))}
-            <button type="button" onClick={handleAddOption}>
-              Add Option
+          </div>
+          <div className="w-full justify-center flex items-center">
+            <button
+              className="active:scale-95 transition-all items-center justify-center flex bg-primary rounded-lg px-4 py-8 text-white md:w-1/3 w-full"
+              disabled={loading}
+            >
+              {loading ? <Spinner /> : "Create Poll"}
             </button>
           </div>
-          <button type="submit">Submit</button>
         </div>
       </form>
     </Container>
   );
 };
-
-// const CreatePoll: NextPage = () => {
-//   return (
-//     <>
-//       <DashboardHeader />
-//       <Container className="justify-center grid md:grid-cols-2 gap-8 gap-y-12 grid-cols-1"></Container>
-//     </>
-//   );
-// };
 
 export default Create;

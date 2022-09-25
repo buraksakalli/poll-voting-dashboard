@@ -1,4 +1,4 @@
-const slugGenerator = (txt: string) => {
+export const slugGenerator = (txt: string) => {
   return txt
     .toString() // Convert to string
     .toLowerCase() // Change to lowercase

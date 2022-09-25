@@ -31,7 +31,7 @@ export const Header = () => {
               </Link>
             </div>
             <Link href="/sign-up">
-              <Button variant="primary" className="rounded-full text-white">
+              <Button variant="primary" className="rounded-full">
                 Get started
               </Button>
             </Link>

@@ -7,20 +7,20 @@ export const DashboardHeader = () => {
       <div className="mx-auto max-w-7xl">
         <nav className="relative z-50 flex justify-between">
           <div className="flex items-center md:gap-x-12">
-            <Link href="/">
+            <Link href="/dashboard">
               <Image src="/cactus.png" alt="logo" width={60} height={60} />
             </Link>
           </div>
           <div className="flex items-center gap-x-5 md:gap-x-8">
             <div className="hidden md:block">
-              <Link href="/login">
+              <Link href="/my-polls">
                 <Button className="inline-block rounded-lg py-1 px-2 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900">
                   My polls
                 </Button>
               </Link>
             </div>
             <Link href="/create">
-              <Button variant="primary" className="rounded-full text-white">
+              <Button variant="primary" className="rounded-full">
                 Create a Poll
               </Button>
             </Link>
