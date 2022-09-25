@@ -24,9 +24,7 @@ const Dashboard: NextPage = () => {
 
       // @ts-ignore
       intObserver.current = new IntersectionObserver((polls) => {
-        if (polls[0].isIntersecting && hasNextPage) {
-          fetchNextPage();
-        }
+        if (polls[0].isIntersecting && hasNextPage) fetchNextPage();
       });
 
       // @ts-ignore

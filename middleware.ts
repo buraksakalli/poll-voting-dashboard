@@ -19,19 +19,28 @@ const verifyToken = async (token: string | undefined) => {
   return user;
 };
 
-const matcher = ["/sign-up", "/login", "/dashboard/:path"];
+const matcher = [
+  "/sign-up",
+  "/login",
+  "/dashboard/:path",
+  "/poll/:path",
+  "/my-polls",
+  "/create",
+];
+
+const freeRoutes = ["/sign-up", "/login", "/"];
+const protectedRoutes = ["dashboard", "my-polls", "create", "poll"];
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get("token");
   const user = await verifyToken(token);
 
-  if (request.nextUrl.pathname === "/dashboard") {
-    if (!user) {
-      return NextResponse.redirect(new URL("/login", request.url));
+  if (!user) {
+    if (protectedRoutes.includes(request.nextUrl.pathname.split("/")[1])) {
+      return NextResponse.redirect(new URL("/", request.url));
     }
-  }
-  if (matcher.includes(request.nextUrl.pathname)) {
-    if (user) {
+  } else {
+    if (freeRoutes.includes(request.nextUrl.pathname)) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }

@@ -33,7 +33,7 @@ const MyPolls: NextPage = () => {
       {!loading && polls.length === 0 && (
         <div className="text-center">
           <h1 className="text-2xl font-bold">You have no polls</h1>
-          <div className="flex w-full justify-center">
+          <div className="flex w-full justify-center my-6">
             <Link href="/create">
               <Button variant="primary" className="rounded-full">
                 Create a poll

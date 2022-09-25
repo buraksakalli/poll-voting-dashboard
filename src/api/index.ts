@@ -30,8 +30,10 @@ export const createEntry = async ({ poll_id, option }: ICreateEntry) => {
 };
 
 export const getPoll = async (slug: string) => {
-  const response = await fetcher.get(`/polls/${slug}`);
-  return response.data;
+  if (slug !== undefined) {
+    const response = await fetcher.get(`/polls/${slug}`);
+    return response.data;
+  }
 };
 
 export const createPoll = async (data: any) => {

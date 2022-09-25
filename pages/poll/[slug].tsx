@@ -13,6 +13,8 @@ import {
   shareOnTwitter,
 } from "@/utils/webIntent";
 import { createEntry, getPoll } from "@/api/index";
+import { useQuery, useQueryClient } from "react-query";
+import { GetServerSideProps } from "next";
 
 interface IPoll {
   title: string;
@@ -34,8 +36,7 @@ type PollOptionType = {
   labels: Array<string>;
 };
 
-const Poll = () => {
-  const [poll, setPolls] = useState<PollType | null>(null);
+const Poll = ({ slug }: { slug: string }) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [pollOptions, setPollOptions] = useState<PollOptionType>({
@@ -45,40 +46,42 @@ const Poll = () => {
   const [showGraph, setShowGraph] = useState<boolean>(false);
   const [isPollExpired, setIsPollExpired] = useState<boolean>(false);
 
-  const router = useRouter();
-  const { slug } = router.query;
+  const queryClient = useQueryClient();
+
+  // const router = useRouter();
+  // const { slug } = router.query;
+
+  const { data, status, error } = useQuery("poll", () => getPoll(String(slug)));
 
   useEffect(() => {
     setLoading(false);
   }, []);
 
   useEffect(() => {
-    setLoading(true);
-    if (slug) {
-      getPoll(String(slug)).then((data) => {
-        setPolls(data);
-        setLoading(false);
-        setPollOptions({ labels: data.poll.options });
-        setPollSeries(data.series);
-        if (data.entries.length > 0) setShowGraph(true);
-        if (dayjs(data.poll.expiry_date).isBefore(dayjs()))
-          setIsPollExpired(true);
-      });
+    if (data?.poll?._id) {
+      setPollOptions({ labels: data.poll.options });
+      setPollSeries(data.series);
+      if (data.entries.length > 0) setShowGraph(true);
+      if (dayjs(data.poll.expiry_date).isBefore(dayjs())) {
+        setIsPollExpired(true);
+      }
     }
-  }, [slug]);
+  }, [data]);
 
   const handleClick = async () => {
     if (selectedOption) {
-      if (dayjs(poll?.poll.expiry_date).isBefore(dayjs())) {
+      if (dayjs(data?.poll.expiry_date).isBefore(dayjs())) {
         alert("Poll is expired");
         return;
       }
       const res = await createEntry({
-        poll_id: poll?.poll._id!,
+        poll_id: data?.poll._id!,
         option: selectedOption,
       });
 
-      if (res.data._id) {
+      if (res?.data?._id) {
+        queryClient.invalidateQueries("poll");
+        // TODO: show success message
         // successfull!
       } else {
         // error
@@ -95,18 +98,18 @@ const Poll = () => {
           <div className="flex items-center md:justify-between flex-col md:flex-row">
             <div>
               <h1 className="tracking-wide text-3xl md:text-7xl font-semibold text-inverted md:max-w-3xl">
-                {poll?.poll?.title}
+                {data?.poll?.title}
               </h1>
               <p className="text-inverted font-thin my-4">
-                Created by <span>{poll?.poll?.user_id}</span> at{" "}
+                Created by <span>{data?.poll?.user_id}</span> at{" "}
                 <span className="text-inverted font-thin">
-                  {dayjs(poll?.poll?.created_at).format("DD.MM.YYYY HH:mm")}
+                  {dayjs(data?.poll?.created_at).format("DD.MM.YYYY HH:mm")}
                 </span>
               </p>
               {!isPollExpired ? (
                 <p>
-                  Voting end in{" "}
-                  {dayjs(poll?.poll?.expiry_date).format("DD.MM.YYYY HH:mm")}
+                  Voting end on{" "}
+                  {dayjs(data?.poll?.expiry_date).format("DD.MM.YYYY")}
                 </p>
               ) : (
                 "Poll is expired"
@@ -145,7 +148,7 @@ const Poll = () => {
             )}
           </div>
           <div className="flex flex-col gap-6 my-6">
-            {poll?.poll?.options.map((option, index) => (
+            {data?.poll?.options.map((option: any, index: number) => (
               <button key={index} onClick={() => setSelectedOption(option)}>
                 <div
                   key={index}
@@ -181,6 +184,24 @@ const Poll = () => {
       </Container>
     </DashboardLayout>
   );
+};
+
+// getServerSideProps and return slug
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const slug = context.params?.slug ?? "";
+
+  if (!slug) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: {
+      slug,
+    },
+  };
 };
 
 export default Poll;
