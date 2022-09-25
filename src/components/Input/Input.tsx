@@ -3,15 +3,15 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: boolean;
 }
 
-export const Input: React.FC<InputProps> = ({ ...props }) => {
+export const Input: React.FC<InputProps> = ({ label, ...props }) => {
   return (
     <>
-      {props?.label && (
+      {label && (
         <label
           htmlFor={props.name}
           className="mb-3 block text-sm font-medium text-gray-700"
         >
-          {props.label}
+          {label}
         </label>
       )}
       <input

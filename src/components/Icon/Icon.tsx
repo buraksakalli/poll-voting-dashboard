@@ -54,7 +54,7 @@ export const Arrow: React.FC<IconProps> = ({ ...props }) => {
     >
       <path
         d="M7 17V1M7 1L1 7M7 1L13 7"
-        stroke-width="2"
+        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />

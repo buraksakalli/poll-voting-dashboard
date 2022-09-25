@@ -31,13 +31,13 @@ export const useAuthForm = ({ type = "LOGIN" }: UseLoginProps) => {
           document.cookie = `token=${data.token}`;
           window.location.href = "/dashboard";
         } else if (data.id) window.location.href = "/login";
-        else setError(data?.message ?? "Error");
+        else setError(data.message ?? "Error");
 
         setLoading(false);
       })
       .catch((err) => {
-        alert(err?.statusText);
-        setError(err?.message ?? "Error");
+        alert(err.statusText);
+        setError(err.statusText ?? "Error");
         setLoading(false);
 
         return Promise.reject(err.json());
