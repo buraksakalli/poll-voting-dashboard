@@ -1,5 +1,3 @@
-import toast from "react-hot-toast";
-
 export const shareOnTwitter = () => {
   const url = window.location.href;
   const title = document.title;
@@ -26,10 +24,4 @@ export const shareOnLinkedin = () => {
     "&summary=" +
     text;
   window.open(navUrl, "_blank");
-};
-
-export const copyPath = () => {
-  const url = window.location.href;
-  navigator.clipboard.writeText(url);
-  toast.success("Copied to clipboard");
 };
