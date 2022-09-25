@@ -13,6 +13,7 @@ const style = {
   filter: "text-primary bg-secondary",
   disabled: "bg-gray-100 text-gray-300",
   danger: "bg-red-500 active:bg-red-900 hover:bg-red-600 text-base-500",
+  loading: "bg-gray-100 text-gray-300",
 };
 
 export const Button: React.FC<ButtonProps> = ({ className, ...props }) => {

@@ -21,7 +21,6 @@ export const useAuthText = () => {
   const { pathname } = router;
 
   useEffect(() => {
-    console.log(pathname);
     if (pathname === "/sign-up") {
       setText({
         link: "/login",
