@@ -6,7 +6,7 @@ const verifyToken = async (token: string | undefined) => {
 
   console.log(token);
 
-  const user = await fetch("http://localhost:3001/auth", {
+  const user = await fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/auth`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
