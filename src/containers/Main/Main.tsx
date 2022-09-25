@@ -20,7 +20,7 @@ export const Main = () => {
           on, this app is for you!
         </p>
         <div className="flex justify-center my-4">
-          <Button variant="primary" className="text-white rounded-full">
+          <Button variant="primary" className="rounded-full">
             Create a poll
           </Button>
         </div>

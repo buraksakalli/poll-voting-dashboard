@@ -7,8 +7,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const style = {
-  primary:
-    "bg-primary active:bg-primary-900 hover:bg-primary-600 text-base-500",
+  primary: "bg-primary active:bg-primary-900 hover:bg-primary-600 text-white",
   default: "active:bg-gray-100 hover:bg-gray-50 text-inverted",
   filter: "text-primary bg-secondary",
   disabled: "bg-gray-100 text-gray-300",

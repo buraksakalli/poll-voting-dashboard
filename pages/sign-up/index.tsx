@@ -54,7 +54,7 @@ const SignUp = () => {
         <Button
           variant={!loading ? "primary" : "loading"}
           type="submit"
-          className="rounded-full text-white flex justify-center"
+          className="rounded-full flex justify-center"
           disabled={Boolean(loading)}
         >
           <span className="flex items-center gap-2">
