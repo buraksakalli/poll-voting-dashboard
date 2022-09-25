@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { authUser } from "../api";
+import { toast } from "react-toastify";
 
 type UseLoginProps = {
   type: "LOGIN" | "REGISTER";
@@ -31,8 +32,7 @@ export const useAuthForm = ({ type = "LOGIN" }: UseLoginProps) => {
         setLoading(false);
       })
       .catch((err) => {
-        alert(err.statusText);
-        setError(err.statusText ?? "Error");
+        toast.error(err.message);
         setLoading(false);
 
         return Promise.reject(err);
