@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "react-query";
-import { AppContextProvider } from "@/contexts/index";
 import { ToastContainer } from "react-toastify";
+import NextNProgress from "nextjs-progressbar";
+import { AppContextProvider } from "@/contexts/index";
 
 interface IProps {
   children?: any;
@@ -13,6 +14,7 @@ export function Providers({ children }: IProps) {
     <QueryClientProvider client={queryClient}>
       <AppContextProvider>{children}</AppContextProvider>
       <ToastContainer />
+      <NextNProgress color="#fa4a25" />
     </QueryClientProvider>
   );
 }
